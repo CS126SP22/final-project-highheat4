@@ -40,7 +40,7 @@ FetchContent_Declare(
 FetchContent_GetProperties(catch2)
 if(NOT catch2_POPULATED)
     FetchContent_Populate(catch2)
-    add_library(catch2 INTERFACE include/particle.h src/particle.cpp)
+    add_library(catch2 INTERFACE include/herbivore.h src/herbivore.cpp include/vegetation.h src/vegetation.cpp include/random.h src/random.cpp)
     target_include_directories(catch2 INTERFACE ${catch2_SOURCE_DIR}/single_include)
 endif()
 
@@ -49,11 +49,11 @@ get_filename_component(APP_PATH "${CMAKE_CURRENT_SOURCE_DIR}/" ABSOLUTE)
 
 include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
 
-list(APPEND SOURCE_FILES    src/gas_container.cc
-                            src/particle.cpp
-                            src/gas_simulation_app.cc)
+list(APPEND SOURCE_FILES src/animal_container.cc
+        src/herbivore.cpp
+        src/animal_simulation.cc)
 
-list(APPEND TEST_FILES tests/test_container.cc tests/test_particle.cc)
+list(APPEND TEST_FILES tests/test_container.cc tests/test_animal.cc)
 
 ci_make_app(
         APP_NAME        gas-simulation
