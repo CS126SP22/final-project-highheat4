@@ -52,11 +52,6 @@ namespace animal_simulator {
     const size_t kDefaultHeight = 500;
 
     /**
-     * The default number of each animal type.
-     */
-    const size_t kDefaultCount = 10;
-
-    /**
      * The actual width, height, and top left corner coordinates of the gas container.
      */
     size_t width_; // Width of container.

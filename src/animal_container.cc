@@ -39,6 +39,9 @@ namespace animal_simulator {
     ci::gl::drawStrokedRect(ci::Rectf(vec2(x_coor_, y_coor_),
                       vec2(x_coor_ + width_, y_coor_ + height_)));
 
+    for (int i = 0; i < vegetation_.size(); i++) {
+      vegetation_[i].Draw();
+    }
   }
 
   void AnimalContainer::AdvanceOneFrame() {
@@ -64,10 +67,14 @@ namespace animal_simulator {
       herbivores_.at(i).Move();
     }
 
-    if (spawn_timer_ > 60) {
-        vegetation_.push_back(Vegetation());
-        spawn_timer_ = 0;
+    if (frame_count_ > 60) {
+        vegetation_.push_back(Vegetation(vec2(kDefaultXCoord, kDefaultYCoord), vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight)));
+        frame_count_ = 0;
+        for (int i = 0; i < vegetation_.size(); i++) {
+            vegetation_[i].Grow();
+        }
     }
+    frame_count_++;
   }
 
 

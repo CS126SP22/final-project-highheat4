@@ -2,25 +2,22 @@
 // Created by Ayan Bhowmick on 4/12/22.
 //
 #include "vegetation.h"
+#include "random.h"
 
 namespace animal_simulator {
-    Vegetation::Vegetation() {
-        food_quantity_ = kDefaultFoodQuantity;
-        growth_rate_ = kDefaultGrowthRate;
-    }
 
-    Vegetation::Vegetation(vec2 top_left_corner, vec2 bottom_right_corner) {
+    Vegetation::Vegetation(glm::vec2 top_left_corner, glm::vec2 bottom_right_corner) {
         food_quantity_ = kDefaultFoodQuantity;
         growth_rate_ = kDefaultGrowthRate;
-        top_left_spawn_ = top_left_corner;
-        bottom_right_corner = bottom_right_spawn_;
+        my_position_ = vec2(Random::fRand(top_left_corner.x, bottom_right_corner.x),
+                            Random::fRand(top_left_corner.y, bottom_right_corner.y));
     }
 
     void Vegetation::Grow() {
         food_quantity_ += growth_rate_;
     }
 
-    void Vegetation::Draw() {
+    void Vegetation::Draw() const {
         ci::gl::color(ci::Color("green"));
         ci::gl::drawSolidCircle(my_position_, food_quantity_);
     }

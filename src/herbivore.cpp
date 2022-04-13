@@ -15,7 +15,7 @@ namespace animal_simulator {
     energy_ = kDefaultEnergy;
   }
 
-  Herbivore Herbivore::GenerateRandomAnimal(float new_radius, float new_mass, ci::Color new_color) {
+  Herbivore Herbivore::GenerateRandomHerbivore(float new_radius, float new_mass, ci::Color new_color) {
     double kMinVelocity = 0.0;
     double kMaxVelocity = 10.0;
 
@@ -27,52 +27,28 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
     return new_animal;
   }
 
-  std::vector<Herbivore> Herbivore::SpawnHerbivores(size_t count) {
-    //constant labeling
-    glm::vec3 radii;
-    radii[0] = 20;
-    radii[1] = 5;
-    radii[2] = 30;
-
-    glm::vec3 masses;
-    masses[0] = 10;
-    masses[1] = 50;
-    masses[2] = 20;
-
-    const ci::Color kColors [3] = {ci::Color("yellow"), ci::Color("red"),ci::Color("blue")};
-
-    std::vector<Herbivore> animals;
-    for (size_t i = 0; i < count; i++) {
-      for (int j = 0; j < masses.length(); j++) {
-        animals.push_back(GenerateRandomAnimal(radii[j], masses[j], kColors[j]));
-      }
-    }
-
-    return animals;
-  }
-
   glm::vec2 Herbivore::GetPosition() const {
     return position_;
   }
 
-  glm::vec2 Herbivore::GetVelocity() {
+  glm::vec2 Herbivore::GetVelocity() const {
     return velocity_;
   }
 
+    float Herbivore::GetMass() const {
+        return mass_;
+    }
+
+    float Herbivore::GetRadius() const {
+        return radius_;
+    }
+
+    ci::Color Herbivore::GetColor() const {
+        return color_;
+    }
+
   void Herbivore::SetVelocity(glm::vec2 new_velocity) {
     velocity_ = new_velocity;
-  }
-
-  float Herbivore::GetMass() {
-    return mass_;
-  }
-
-  float Herbivore::GetRadius() const {
-    return radius_;
-  }
-
-  ci::Color Herbivore::GetColor() const {
-    return color_;
   }
 
   void Herbivore::Move() {
