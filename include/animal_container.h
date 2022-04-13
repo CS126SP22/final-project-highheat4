@@ -2,6 +2,7 @@
 
 #include "cinder/gl/gl.h"
 #include "herbivore.h"
+#include "vegetation.h"
 
 using glm::vec2;
 
@@ -35,7 +36,7 @@ namespace animal_simulator {
     /**
      * @returns animals_ vector
      */
-    std::vector<Herbivore> GetParticles();
+    std::vector<Herbivore> GetAnimals();
 
   private:
     /**
@@ -64,14 +65,19 @@ namespace animal_simulator {
     int y_coor_;
 
     /**
-     * A vector storing all the animals within the gas container.
+     * A vector storing all the animals within the animal container.
      */
-    std::vector<Herbivore> animals_;
+    std::vector<Herbivore> herbivores_;
 
     /**
-     * Sorts all the animals by mass.
+     * A vector storing all the vegetation within the animal container.
      */
-    void SortByMass();
+    std::vector<Vegetation> vegetation_;
+
+    /**
+     * Keeps track of how many frames have passed so as to update spawner.
+     */
+    int spawn_timer_ = 0;
   };
 
 }

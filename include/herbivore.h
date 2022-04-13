@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cinder/gl/gl.h"
+#include "random.h"
 
 using glm::vec2;
 
@@ -28,7 +29,7 @@ namespace animal_simulator {
      * @param count the number of animals we want to make.
      * @return The vector storing all of the generated animals.
      */
-    static std::vector<Herbivore> SpawnAnimals(size_t count);
+    static std::vector<Herbivore> SpawnHerbivores(size_t count);
 
     /**
      * Updates the animal position based on its velocity.
@@ -59,13 +60,7 @@ namespace animal_simulator {
      */
     float CalculateDistance(Herbivore animal_2) const;
 
-    /**
-     * Calculates a random double between fMin and fMax.
-     * @param fMin the minimum randomized double that can be returned.
-     * @param fMax the maximum randomized double that can be returned.
-     * @return A random double between fMin and fMax.
-     */
-    static double fRand(double fMin, double fMax);
+
 
     /**
      * Checks whether a collision occurs against a rectangular container.
@@ -115,6 +110,11 @@ namespace animal_simulator {
      * Default spawn health.
      */
      static const int kDefaultHealth = 10;
+
+     /**
+      *
+      */
+     static const int kDefaultEnergy = 10;
 
     /**
      * Individual animal position, velocity, mass, radius, and color.

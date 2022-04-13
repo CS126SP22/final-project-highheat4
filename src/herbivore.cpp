@@ -12,6 +12,7 @@ namespace animal_simulator {
     radius_ = new_radius;
     color_ = new_color;
     health_ = kDefaultHealth;
+    energy_ = kDefaultEnergy;
   }
 
   Herbivore Herbivore::GenerateRandomAnimal(float new_radius, float new_mass, ci::Color new_color) {
@@ -20,13 +21,13 @@ namespace animal_simulator {
 
     Herbivore new_animal =
     Herbivore(vec2(rand() % kDefaultWidth + kDefaultXCoord, rand() % kDefaultHeight + kDefaultYCoord), //position
-vec2(Herbivore::fRand(kMinVelocity, kMaxVelocity),
-     Herbivore::fRand(kMinVelocity, kMaxVelocity)),    //velocity
+vec2(Random::fRand(kMinVelocity, kMaxVelocity),
+     Random::fRand(kMinVelocity, kMaxVelocity)),    //velocity
       new_radius, new_mass, new_color);
     return new_animal;
   }
 
-  std::vector<Herbivore> Herbivore::SpawnAnimals(size_t count) {
+  std::vector<Herbivore> Herbivore::SpawnHerbivores(size_t count) {
     //constant labeling
     glm::vec3 radii;
     radii[0] = 20;
@@ -81,12 +82,6 @@ vec2(Herbivore::fRand(kMinVelocity, kMaxVelocity),
   float Herbivore::CalculateDistance(Herbivore animal_2) const {
     return (float) sqrt(pow(this -> position_.x - animal_2 . position_.x, 2) +
               pow(this -> position_.y - animal_2.position_.y, 2) * 1.0);
-  }
-
-//// Source: Stackoverflow
-  double Herbivore::fRand(double fMin, double fMax) {
-    double f = (double)rand() / RAND_MAX;
-    return fMin + f * (fMax - fMin);
   }
 
   bool Herbivore::IsTouchingAnimal(Herbivore animal_2) const {

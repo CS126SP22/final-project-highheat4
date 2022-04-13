@@ -11,7 +11,8 @@ namespace animal_simulator {
     x_coor_ = kDefaultXCoord;
     y_coor_ = kDefaultYCoord;
 
-    animals_ = Herbivore::SpawnAnimals(kDefaultCount);
+      Vegetation vegetation = Vegetation(vec2(kDefaultXCoord, kDefaultYCoord), vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight));
+      vegetation_.push_back(vegetation);
   }
 
   AnimalContainer::AnimalContainer(std::vector<Herbivore> & animals, vec2 top_left_corner, vec2 bottom_right_corner) {
@@ -20,17 +21,19 @@ namespace animal_simulator {
     width_ = bottom_right_corner.x - x_coor_;
     height_ = bottom_right_corner.y - y_coor_;
 
-    animals_ = animals;
+    herbivores_ = animals;
+    Vegetation vegetation = Vegetation(top_left_corner, bottom_right_corner);
+    vegetation_.push_back(vegetation);
   }
 
-  std::vector<Herbivore> AnimalContainer::GetParticles() {
-    return animals_;
+  std::vector<Herbivore> AnimalContainer::GetAnimals() {
+    return herbivores_;
   }
 
   void AnimalContainer::Display() const {
-    for (size_t i = 0; i < animals_.size(); i++) {
-      ci::gl::color(animals_.at(i).GetColor());
-      ci::gl::drawSolidCircle(animals_.at(i).GetPosition(), animals_.at(i).GetRadius());
+    for (size_t i = 0; i < herbivores_.size(); i++) {
+      ci::gl::color(herbivores_.at(i).GetColor());
+      ci::gl::drawSolidCircle(herbivores_.at(i).GetPosition(), herbivores_.at(i).GetRadius());
     }
 
     ci::gl::drawStrokedRect(ci::Rectf(vec2(x_coor_, y_coor_),
@@ -39,26 +42,31 @@ namespace animal_simulator {
   }
 
   void AnimalContainer::AdvanceOneFrame() {
-    for (size_t i = 0; i < animals_.size(); i++) {
+    for (size_t i = 0; i < herbivores_.size(); i++) {
       //Checks and updates upon wall collision
 
-      animals_.at(i).CheckContainerCollision(x_coor_, x_coor_ + width_, y_coor_, y_coor_ + height_);
+      herbivores_.at(i).CheckContainerCollision(x_coor_, x_coor_ + width_, y_coor_, y_coor_ + height_);
 
       //Checks and updates upon animal collision
-      for (size_t j = i + 1; j < animals_.size(); j++) {
-        if (animals_.at(i).ApproachesOtherAnimal(animals_.at(j))) {
-          if (animals_.at(i).IsTouchingAnimal(animals_.at(j))) {
+      for (size_t j = i + 1; j < herbivores_.size(); j++) {
+        if (herbivores_.at(i).ApproachesOtherAnimal(herbivores_.at(j))) {
+          if (herbivores_.at(i).IsTouchingAnimal(herbivores_.at(j))) {
             //Update velocities
             std::vector<vec2> new_velocities =
-                animals_.at(i).CalculateCollisionResults(animals_.at(j));
+                herbivores_.at(i).CalculateCollisionResults(herbivores_.at(j));
 
-            animals_.at(i).SetVelocity(new_velocities.at(0));
-            animals_.at(j).SetVelocity(new_velocities.at(1));
+            herbivores_.at(i).SetVelocity(new_velocities.at(0));
+            herbivores_.at(j).SetVelocity(new_velocities.at(1));
           }
         }
       }
 
-      animals_.at(i).Move();
+      herbivores_.at(i).Move();
+    }
+
+    if (spawn_timer_ > 60) {
+        vegetation_.push_back(Vegetation());
+        spawn_timer_ = 0;
     }
   }
 

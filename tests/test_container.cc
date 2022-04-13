@@ -18,7 +18,7 @@ TEST_CASE("Test wall collisions") {
     AnimalContainer gas_container = AnimalContainer(animals, vec2(kTopWall, kLeftWall), vec2(kBottomWall, kRightWall));
     gas_container.AdvanceOneFrame();
 
-    REQUIRE(gas_container.GetParticles()[0].GetVelocity().y == 5.0f);
+    REQUIRE(gas_container.GetAnimals()[0].GetVelocity().y == 5.0f);
   }
 
   SECTION("Bottom wall collision") {
@@ -28,7 +28,7 @@ TEST_CASE("Test wall collisions") {
     AnimalContainer gas_container = AnimalContainer(animals, vec2(kTopWall, kLeftWall), vec2(kBottomWall, kRightWall));
     gas_container.AdvanceOneFrame();
 
-    REQUIRE(gas_container.GetParticles()[0].GetVelocity().y == -5.0f);
+    REQUIRE(gas_container.GetAnimals()[0].GetVelocity().y == -5.0f);
   }
 
   SECTION("Left wall collision") {
@@ -38,7 +38,7 @@ TEST_CASE("Test wall collisions") {
     AnimalContainer gas_container = AnimalContainer(animals, vec2(kTopWall, kLeftWall), vec2(kBottomWall, kRightWall));
     gas_container.AdvanceOneFrame();
 
-    REQUIRE(gas_container.GetParticles()[0].GetVelocity().x == 5.0f);
+    REQUIRE(gas_container.GetAnimals()[0].GetVelocity().x == 5.0f);
   }
 
   SECTION("Right wall collision") {
@@ -48,7 +48,7 @@ TEST_CASE("Test wall collisions") {
     AnimalContainer gas_container = AnimalContainer(animals, vec2(kTopWall, kLeftWall), vec2(kBottomWall, kRightWall));
     gas_container.AdvanceOneFrame();
 
-    REQUIRE(gas_container.GetParticles()[0].GetVelocity().x == -5.0f);
+    REQUIRE(gas_container.GetAnimals()[0].GetVelocity().x == -5.0f);
   }
 }
 
@@ -60,8 +60,8 @@ TEST_CASE("Test animal collisions") {
 
     AnimalContainer gas_container = AnimalContainer(animals, vec2(kTopWall, kLeftWall), vec2(kBottomWall, kRightWall));
     gas_container.AdvanceOneFrame();
-    REQUIRE(gas_container.GetParticles()[0].GetVelocity().x == -5.0f);
-    REQUIRE(gas_container.GetParticles()[1].GetVelocity().x == 5.0f);
+    REQUIRE(gas_container.GetAnimals()[0].GetVelocity().x == -5.0f);
+    REQUIRE(gas_container.GetAnimals()[1].GetVelocity().x == 5.0f);
   }
 
   SECTION("Verticle animal collision") {
@@ -71,8 +71,8 @@ TEST_CASE("Test animal collisions") {
 
     AnimalContainer gas_container = AnimalContainer(animals, vec2(kTopWall, kLeftWall), vec2(kBottomWall, kRightWall));
     gas_container.AdvanceOneFrame();
-    REQUIRE(gas_container.GetParticles()[0].GetVelocity().y == -5.0f);
-    REQUIRE(gas_container.GetParticles()[1].GetVelocity().y == 5.0f);
+    REQUIRE(gas_container.GetAnimals()[0].GetVelocity().y == -5.0f);
+    REQUIRE(gas_container.GetAnimals()[1].GetVelocity().y == 5.0f);
   }
 
   SECTION("Touching animals moving away from each other maintain their original velocities") {
@@ -82,8 +82,8 @@ TEST_CASE("Test animal collisions") {
 
     AnimalContainer gas_container = AnimalContainer(animals, vec2(kTopWall, kLeftWall), vec2(kBottomWall, kRightWall));
     gas_container.AdvanceOneFrame();
-    REQUIRE(gas_container.GetParticles()[0].GetVelocity().y == -5.0f);
-    REQUIRE(gas_container.GetParticles()[1].GetVelocity().y == 5.0f);
+    REQUIRE(gas_container.GetAnimals()[0].GetVelocity().y == -5.0f);
+    REQUIRE(gas_container.GetAnimals()[1].GetVelocity().y == 5.0f);
   }
 
   SECTION("Non-touching animals moving closer to each other maintain their original velocities") {
@@ -93,8 +93,8 @@ TEST_CASE("Test animal collisions") {
 
     AnimalContainer gas_container = AnimalContainer(animals, vec2(kTopWall, kLeftWall), vec2(kBottomWall, kRightWall));
     gas_container.AdvanceOneFrame();
-    REQUIRE(gas_container.GetParticles()[0].GetVelocity().y == 5.0f);
-    REQUIRE(gas_container.GetParticles()[1].GetVelocity().y == -5.0f);
+    REQUIRE(gas_container.GetAnimals()[0].GetVelocity().y == 5.0f);
+    REQUIRE(gas_container.GetAnimals()[1].GetVelocity().y == -5.0f);
   }
 
   SECTION("Multiple animal collisions all detected") {
@@ -107,9 +107,9 @@ TEST_CASE("Test animal collisions") {
     gas_container.AdvanceOneFrame();
 
     //shows that velocities of ALL animals changed, not just 2 of the three after one frame
-    REQUIRE(gas_container.GetParticles()[0].GetVelocity() != vec2(1, 5));
-    REQUIRE(gas_container.GetParticles()[1].GetVelocity() != vec2(1, -5));
-    REQUIRE(gas_container.GetParticles()[2].GetVelocity() != vec2(-5, 1));
+    REQUIRE(gas_container.GetAnimals()[0].GetVelocity() != vec2(1, 5));
+    REQUIRE(gas_container.GetAnimals()[1].GetVelocity() != vec2(1, -5));
+    REQUIRE(gas_container.GetAnimals()[2].GetVelocity() != vec2(-5, 1));
   }
 }
 
@@ -120,7 +120,7 @@ TEST_CASE("Herbivore Movement") {
 
     AnimalContainer gas_container = AnimalContainer(animals, vec2(kTopWall, kLeftWall), vec2(kBottomWall, kRightWall));
     gas_container.AdvanceOneFrame();
-    REQUIRE(gas_container.GetParticles()[0].GetPosition().y == 50);
+    REQUIRE(gas_container.GetAnimals()[0].GetPosition().y == 50);
   }
 
   SECTION("Horizontal movement") {
@@ -129,7 +129,7 @@ TEST_CASE("Herbivore Movement") {
 
     AnimalContainer gas_container = AnimalContainer(animals, vec2(kTopWall, kLeftWall), vec2(kBottomWall, kRightWall));
     gas_container.AdvanceOneFrame();
-    REQUIRE(gas_container.GetParticles()[0].GetPosition().x == 50);
+    REQUIRE(gas_container.GetAnimals()[0].GetPosition().x == 50);
   }
 }
 

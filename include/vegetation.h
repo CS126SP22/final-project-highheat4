@@ -16,7 +16,27 @@ namespace animal_simulator {
     public:
         Vegetation();
 
+        Vegetation(vec2 top_left_corner, vec2 bottom_right_corner);
+
+        void Grow();
+        float GetSize();
+
+        /**
+         * Draws the current vegetation unit.
+         */
+        void Draw();
     private:
+        /**
+         * Current position of vegetation.
+         */
+        glm::vec2 my_position_;
+
+        /**
+         * Top left and bottom right spawn restrictions of vegetation.
+         */
+        static vec2 top_left_spawn_;
+        static vec2 bottom_right_spawn_;
+
         /**
          * The amount of food that is stored within the vegetation - scales with size.
          */
@@ -27,7 +47,10 @@ namespace animal_simulator {
          */
         float growth_rate_;
 
-        float kDefaultFoodQuantity = 5;
+        /**
+         * Default food quantity and growth rate.
+         */
+        float kDefaultFoodQuantity = 1;
         float kDefaultGrowthRate = 1;
     };
 }
