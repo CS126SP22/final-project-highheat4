@@ -20,7 +20,13 @@ namespace animal_simulator {
      */
     AnimalContainer();
 
-    AnimalContainer(std::vector<Herbivore> & animals, vec2 top_left_corner, vec2 bottom_right_corner);
+    /**
+     * Complex container for more in depth initialization.
+     * @param herbivores The herbivores input to the container.
+     * @param top_left_corner of the container.
+     * @param bottom_right_corner of the container.
+     */
+    AnimalContainer(std::vector<Herbivore> & herbivores, vec2 top_left_corner, vec2 bottom_right_corner);
 
     /**
      * Displays the container walls and the current positions of the animals.

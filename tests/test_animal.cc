@@ -19,11 +19,9 @@ TEST_CASE("Test wall collision") {
   SECTION("Wall collision detection confirmed") {
     Herbivore animal =
         Herbivore(vec2(50, 1), vec2(0, -5), 2, 5, ci::Color("red"));
-    animal
-    .CheckContainerCollision(kWallLeft, kWallRight, kWallTop, kWallBottom);
+    animal.CheckContainerCollision(kWallLeft, kWallRight, kWallTop, kWallBottom);
 
-    REQUIRE(animal
-    .GetVelocity().y == 5.0f);
+    REQUIRE(animal.GetVelocity().y == 5.0f);
   }
 }
 
@@ -45,4 +43,10 @@ TEST_CASE("Test animal distance calculation") {
 
     REQUIRE(animal.CalculateDistance(animal_2) == 1);
   }
+}
+
+TEST_CASE("Energy implementation tested") {
+    SECTION("Position moved is less than the original velocity of the object.") {
+
+    }
 }

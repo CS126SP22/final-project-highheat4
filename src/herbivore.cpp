@@ -27,6 +27,15 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
       new_size, new_color);
   }
 
+  Herbivore::Herbivore(vec2 position, vec2 velocity, float radius,
+  float new_size, ci::Color new_color) {
+      position_ = position;
+      velocity_ = velocity;
+      radius_ = radius;
+      size_ = new_size;
+      color_ = new_color;
+  }
+
   glm::vec2 Herbivore::GetPosition() const {
     return position_;
   }
@@ -52,7 +61,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   }
 
   void Herbivore::Move() {
-    size_ += .01;
+    size_ += growth_rate_;
     if (energy_ > 0) {
         vec2 offset_value = velocity_ * energy_ / max_energy_;
         energy_ -= this -> CalculateEnergyConsumption();
@@ -61,7 +70,8 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   }
 
   float Herbivore::CalculateEnergyConsumption() {
-      return (size_ * sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y) * max_health_) / 1000;
+      float kEnergyDivisor = 10000;
+      return (size_ * sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y) * max_health_) / kEnergyDivisor;
   }
 
   bool Herbivore::IsDead() {
