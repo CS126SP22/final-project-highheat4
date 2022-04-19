@@ -70,6 +70,8 @@ namespace animal_simulator {
             }
         }
       herbivores_.at(i).Move();
+      if (herbivores_.at(i).IsDead())
+          herbivores_.erase(herbivores_.begin() + i);
     }
 
     if (frame_count_ > 60) {

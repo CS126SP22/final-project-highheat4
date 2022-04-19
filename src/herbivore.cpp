@@ -52,25 +52,34 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   }
 
   void Herbivore::Move() {
-    vec2 final_offset = velocity_ * energy_ / max_energy_;
+    size_ += .01;
     if (energy_ > 0) {
+        vec2 offset_value = velocity_ * energy_ / max_energy_;
         energy_ -= this -> CalculateEnergyConsumption();
-        position_ += final_offset;
+        position_ += offset_value;
     }
   }
 
   float Herbivore::CalculateEnergyConsumption() {
-      return log10(size_ * sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y) * max_health_) / 1000;
+      return pow(size_ * sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y) * max_health_, 3);
+  }
+
+  bool Herbivore::IsDead() {
+      float kMinThreshold = 0.01;
+      if (energy_ < kMinThreshold || health_ < kMinThreshold) {
+          return true;
+      }
+      return false;
   }
 
   float Herbivore::CalculateDistance(Herbivore animal_2) const {
     return (float) sqrt(pow(this -> position_.x - animal_2 . position_.x, 2) +
-              pow(this -> position_.y - animal_2.position_.y, 2) * 1.0);
+              pow(this -> position_.y - animal_2.position_.y, 2));
   }
 
     float Herbivore::CalculateDistance(Vegetation food) const {
         return (float) sqrt(pow(this -> position_.x - food.GetPosition().x, 2) +
-                            pow(this -> position_.y - food.GetPosition().y, 2) * 1.0);
+                            pow(this -> position_.y - food.GetPosition().y, 2));
     }
 
   bool Herbivore::IsTouchingAnimal(Herbivore animal_2) const {
@@ -98,8 +107,10 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
     }
 
   void Herbivore::Consume(Vegetation & food) {
-    energy_ += eat_rate_;
-    food.Eaten(eat_rate_);
+    if (energy_ < max_energy_) {
+        energy_ += sqrt(base_eat_rate_ * size_);
+        food.Eaten(sqrt(base_eat_rate_ * size_));
+    }
   }
 
   void Herbivore::CheckContainerCollision(float left_wall, float right_wall, float top_wall, float bottom_wall) {
