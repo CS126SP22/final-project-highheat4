@@ -1,4 +1,5 @@
 #include "herbivore.h"
+#include "vegetation.h"
 
 namespace animal_simulator {
 
@@ -8,23 +9,24 @@ namespace animal_simulator {
                        float new_mass, ci::Color new_color) {
     velocity_ = new_velocity;
     position_ = new_position;
-    mass_ = new_mass;
+    size_ = new_mass;
     radius_ = new_radius;
     color_ = new_color;
-    health_ = kDefaultHealth;
-    energy_ = kDefaultEnergy;
+    max_health_ = kDefaultHealth;
+    health_ = max_health_;
+    max_energy_ = kDefaultEnergy;
+    energy_ = max_energy_;
   }
 
-  Herbivore Herbivore::GenerateRandomHerbivore(float new_radius, float new_mass, ci::Color new_color) {
+  Herbivore::Herbivore(float new_radius, float new_mass, ci::Color new_color) {
     double kMinVelocity = 0.0;
     double kMaxVelocity = 10.0;
 
-    Herbivore new_animal =
-    Herbivore(vec2(rand() % kDefaultWidth + kDefaultXCoord, rand() % kDefaultHeight + kDefaultYCoord), //position
+    *this = Herbivore(vec2(rand() % kDefaultWidth + kDefaultXCoord,
+                           rand() % kDefaultHeight + kDefaultYCoord), //position
 vec2(Random::fRand(kMinVelocity, kMaxVelocity),
      Random::fRand(kMinVelocity, kMaxVelocity)),    //velocity
       new_radius, new_mass, new_color);
-    return new_animal;
   }
 
   glm::vec2 Herbivore::GetPosition() const {
@@ -36,7 +38,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   }
 
     float Herbivore::GetMass() const {
-        return mass_;
+        return size_;
     }
 
     float Herbivore::GetRadius() const {
@@ -52,13 +54,24 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   }
 
   void Herbivore::Move() {
-    position_ += velocity_;
+    vec2 final_offset = velocity_ * energy_ / max_energy_;
+    if (energy_ > 0) {
+        energy_ -= this -> CalculateEnergyConsumption();
+        position_ += final_offset;
+    }
   }
+
+  float Herbivore::CalculateEnergyConsumption
 
   float Herbivore::CalculateDistance(Herbivore animal_2) const {
     return (float) sqrt(pow(this -> position_.x - animal_2 . position_.x, 2) +
               pow(this -> position_.y - animal_2.position_.y, 2) * 1.0);
   }
+
+    float Herbivore::CalculateDistance(Vegetation food) const {
+        return (float) sqrt(pow(this -> position_.x - food.GetPosition().x, 2) +
+                            pow(this -> position_.y - food.GetPosition().y, 2) * 1.0);
+    }
 
   bool Herbivore::IsTouchingAnimal(Herbivore animal_2) const {
     float radius_1 = this -> GetRadius();
@@ -71,6 +84,18 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
       return false;
     }
   }
+
+    bool Herbivore::IsTouchingVegetation(Vegetation food) const {
+        float radius_1 = this -> GetRadius();
+        float radius_2 = food.GetSize();
+
+        // Hits animal
+        if (this -> CalculateDistance(food) <= radius_1 + radius_2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
   void Herbivore::CheckContainerCollision(float left_wall, float right_wall, float top_wall, float bottom_wall) {
     if (this -> GetPosition().x - this -> radius_ <= left_wall) { // Hits left wall

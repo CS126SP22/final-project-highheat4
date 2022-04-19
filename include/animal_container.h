@@ -9,14 +9,14 @@ using glm::vec2;
 namespace animal_simulator {
 
 /**
- * The container in which all of the gas animals are contained. This class
+ * The container in which all of the animals are contained. This class
  * stores all of the animals and updates them on each frame of the simulation.
  */
   class AnimalContainer {
   public:
 
     /**
-     * Constructs the gas container.
+     * Constructs the animal container.
      */
     AnimalContainer();
 
@@ -40,19 +40,19 @@ namespace animal_simulator {
 
   private:
     /**
-     * Default top-left corner coordinates of the rectangular gas container.
+     * Default top-left corner coordinates of the rectangular animal container.
      */
     const int kDefaultXCoord = 100;
     const int kDefaultYCoord = 40;
 
     /**
-     * The default width and height of the gas container.
+     * The default width and height of the animal container.
      */
     const size_t kDefaultWidth = 1200;
     const size_t kDefaultHeight = 500;
 
     /**
-     * The actual width, height, and top left corner coordinates of the gas container.
+     * The actual width, height, and top left corner coordinates of the animal container.
      */
     size_t width_; // Width of container.
     size_t height_; // Height of container.
@@ -65,14 +65,24 @@ namespace animal_simulator {
     std::vector<Herbivore> herbivores_;
 
     /**
+     * The max number of herbivores.
+     */
+    int kMaxHerbivoreCount = 10;
+
+    /**
      * A vector storing all the vegetation within the animal container.
      */
     std::vector<Vegetation> vegetation_;
 
     /**
+     * The max vegetation count.
+     */
+    int kMaxVegetationCount = 25;
+
+    /**
      * Keeps track of how many frames have passed so as to update spawner.
      */
-    int spawn_timer_ = 0;
+    int frame_count_ = 0;
   };
 
 }

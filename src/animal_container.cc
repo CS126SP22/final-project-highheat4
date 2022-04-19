@@ -11,8 +11,9 @@ namespace animal_simulator {
     x_coor_ = kDefaultXCoord;
     y_coor_ = kDefaultYCoord;
 
-      Vegetation vegetation = Vegetation(vec2(kDefaultXCoord, kDefaultYCoord), vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight));
-      vegetation_.push_back(vegetation);
+    Vegetation vegetation = Vegetation(vec2(kDefaultXCoord, kDefaultYCoord), vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight));
+    vegetation_.push_back(vegetation);
+    herbivores_.push_back(Herbivore(vec2(kDefaultXCoord+50, kDefaultYCoord+50), vec2(4.5,1.5),2,1, ci::Color("blue")));
   }
 
   AnimalContainer::AnimalContainer(std::vector<Herbivore> & animals, vec2 top_left_corner, vec2 bottom_right_corner) {
@@ -68,7 +69,11 @@ namespace animal_simulator {
     }
 
     if (frame_count_ > 60) {
-        vegetation_.push_back(Vegetation(vec2(kDefaultXCoord, kDefaultYCoord), vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight)));
+        if (vegetation_.size() < kMaxVegetationCount)
+            vegetation_.push_back(Vegetation(vec2(kDefaultXCoord, kDefaultYCoord),
+                     vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight)));
+        if (herbivores_.size() < kMaxHerbivoreCount)
+        {herbivores_.push_back(Herbivore(1,1,ci::Color("Blue")));}
         frame_count_ = 0;
         for (int i = 0; i < vegetation_.size(); i++) {
             vegetation_[i].Grow();

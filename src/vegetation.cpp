@@ -21,4 +21,12 @@ namespace animal_simulator {
         ci::gl::color(ci::Color("green"));
         ci::gl::drawSolidCircle(my_position_, food_quantity_);
     }
+
+    vec2 Vegetation::GetPosition() const {
+        return my_position_;
+    }
+
+    float Vegetation::GetSize() const {
+        return food_quantity_;
+    }
 }

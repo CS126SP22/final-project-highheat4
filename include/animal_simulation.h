@@ -8,7 +8,7 @@
 namespace animal_simulator {
 
 /**
- * An app for visualizing the behavior of an ideal gas.
+ * An app for visualizing the behavior of different animals.
  */
 class AnimalSimulationApp : public ci::app::App {
  public:
