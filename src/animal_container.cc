@@ -65,8 +65,9 @@ namespace animal_simulator {
         }
       }
         for (int k = 0; k < vegetation_.size(); k++) {
-            if (herbivores_.at(i).IsTouchingVegetation(vegetation_[k])) {
-                herbivores_.at(i).Consume(vegetation_[k]);
+            if (herbivores_.at(i).IsTouchingVegetation(vegetation_[k]) &&
+                    herbivores_.at(i).Consume(vegetation_[k])) {
+                vegetation_.erase(vegetation_.begin() + k);
             }
         }
       herbivores_.at(i).Move();

@@ -42,8 +42,9 @@ namespace animal_simulator {
       /**
        * Consumes the given vegetation.
        * @param food the vegetation to be consumed.
+       * @return whether the food is completely eaten.
        */
-      void Consume(Vegetation & food);
+      bool Consume(Vegetation & food);
 
     /**
      * Updates the animal position based on its velocity.

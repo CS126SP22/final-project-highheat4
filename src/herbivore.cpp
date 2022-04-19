@@ -61,7 +61,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   }
 
   float Herbivore::CalculateEnergyConsumption() {
-      return pow(size_ * sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y) * max_health_, 3);
+      return (size_ * sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y) * max_health_) / 1000;
   }
 
   bool Herbivore::IsDead() {
@@ -106,11 +106,12 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
         }
     }
 
-  void Herbivore::Consume(Vegetation & food) {
+  bool Herbivore::Consume(Vegetation & food) {
     if (energy_ < max_energy_) {
         energy_ += sqrt(base_eat_rate_ * size_);
-        food.Eaten(sqrt(base_eat_rate_ * size_));
+        return food.Eaten(sqrt(base_eat_rate_ * size_));
     }
+    return false;
   }
 
   void Herbivore::CheckContainerCollision(float left_wall, float right_wall, float top_wall, float bottom_wall) {
