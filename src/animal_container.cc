@@ -13,7 +13,7 @@ namespace animal_simulator {
 
     Vegetation vegetation = Vegetation(vec2(kDefaultXCoord, kDefaultYCoord), vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight));
     vegetation_.push_back(vegetation);
-    herbivores_.push_back(Herbivore(vec2(kDefaultXCoord+50, kDefaultYCoord+50), vec2(4.5,1.5),2,1, ci::Color("blue")));
+    herbivores_.push_back(Herbivore(vec2(kDefaultXCoord+50, kDefaultYCoord+50), vec2(4.5,1.5),2, ci::Color("blue")));
   }
 
   AnimalContainer::AnimalContainer(std::vector<Herbivore> & animals, vec2 top_left_corner, vec2 bottom_right_corner) {
@@ -64,7 +64,11 @@ namespace animal_simulator {
           }
         }
       }
-
+        for (int k = 0; k < vegetation_.size(); k++) {
+            if (herbivores_.at(i).IsTouchingVegetation(vegetation_[k])) {
+                herbivores_.at(i).Consume(vegetation_[k]);
+            }
+        }
       herbivores_.at(i).Move();
     }
 
@@ -73,7 +77,7 @@ namespace animal_simulator {
             vegetation_.push_back(Vegetation(vec2(kDefaultXCoord, kDefaultYCoord),
                      vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight)));
         if (herbivores_.size() < kMaxHerbivoreCount)
-        {herbivores_.push_back(Herbivore(1,1,ci::Color("Blue")));}
+        {herbivores_.push_back(Herbivore(1,ci::Color("Blue")));}
         frame_count_ = 0;
         for (int i = 0; i < vegetation_.size(); i++) {
             vegetation_[i].Grow();

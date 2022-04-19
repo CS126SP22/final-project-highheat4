@@ -29,4 +29,9 @@ namespace animal_simulator {
     float Vegetation::GetSize() const {
         return food_quantity_;
     }
+
+    bool Vegetation::Eaten(float amount_eaten) {
+        food_quantity_ -= amount_eaten;
+        return (food_quantity_ < 0);
+    }
 }

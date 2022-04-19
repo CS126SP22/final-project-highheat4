@@ -5,12 +5,11 @@ namespace animal_simulator {
 
   using glm::vec2;
 
-  Herbivore::Herbivore(vec2 new_position, vec2 new_velocity, float new_radius,
-                       float new_mass, ci::Color new_color) {
+  Herbivore::Herbivore(vec2 new_position, vec2 new_velocity,
+                       float new_size, ci::Color new_color) {
     velocity_ = new_velocity;
     position_ = new_position;
-    size_ = new_mass;
-    radius_ = new_radius;
+    size_ = new_size;
     color_ = new_color;
     max_health_ = kDefaultHealth;
     health_ = max_health_;
@@ -18,15 +17,14 @@ namespace animal_simulator {
     energy_ = max_energy_;
   }
 
-  Herbivore::Herbivore(float new_radius, float new_mass, ci::Color new_color) {
+  Herbivore::Herbivore(float new_size, ci::Color new_color) {
     double kMinVelocity = 0.0;
     double kMaxVelocity = 10.0;
-
     *this = Herbivore(vec2(rand() % kDefaultWidth + kDefaultXCoord,
                            rand() % kDefaultHeight + kDefaultYCoord), //position
 vec2(Random::fRand(kMinVelocity, kMaxVelocity),
      Random::fRand(kMinVelocity, kMaxVelocity)),    //velocity
-      new_radius, new_mass, new_color);
+      new_size, new_color);
   }
 
   glm::vec2 Herbivore::GetPosition() const {
@@ -42,7 +40,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
     }
 
     float Herbivore::GetRadius() const {
-        return radius_;
+        return size_;
     }
 
     ci::Color Herbivore::GetColor() const {
@@ -61,7 +59,9 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
     }
   }
 
-  float Herbivore::CalculateEnergyConsumption
+  float Herbivore::CalculateEnergyConsumption() {
+      return log10(size_ * sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y) * max_health_) / 1000;
+  }
 
   float Herbivore::CalculateDistance(Herbivore animal_2) const {
     return (float) sqrt(pow(this -> position_.x - animal_2 . position_.x, 2) +
@@ -96,6 +96,11 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
             return false;
         }
     }
+
+  void Herbivore::Consume(Vegetation & food) {
+    energy_ += eat_rate_;
+    food.Eaten(eat_rate_);
+  }
 
   void Herbivore::CheckContainerCollision(float left_wall, float right_wall, float top_wall, float bottom_wall) {
     if (this -> GetPosition().x - this -> radius_ <= left_wall) { // Hits left wall

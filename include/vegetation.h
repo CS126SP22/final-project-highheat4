@@ -36,6 +36,13 @@ namespace animal_simulator {
          */
         void Draw() const;
 
+        /**
+         * Consumes some of the vegetation, showing whether the vegetation is fully eaten or not post consumption.
+         * @param amount_eaten the amount of vegetation eaten.
+         * @return whether the vegetation is fully consumed or not.
+         */
+        bool Eaten(float amount_eaten);
+
     private:
         /**
          * Current position of vegetation.
