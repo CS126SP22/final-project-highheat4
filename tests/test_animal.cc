@@ -46,7 +46,20 @@ TEST_CASE("Test animal distance calculation") {
 }
 
 TEST_CASE("Energy implementation tested") {
-    SECTION("Position moved is less than the original velocity of the object.") {
+    SECTION("Animal movement at first move is normal.") {
+        Herbivore animal =
+                Herbivore(vec2(1, 50), vec2(0, 5), 2, 5, ci::Color("red"));
 
+        animal.Move();
+        REQUIRE(animal.GetPosition() == vec2(1,55));
+    }
+
+    SECTION("Animal movement at second move is zero due to zero energy.") {
+        Herbivore animal =
+                Herbivore(vec2(1, 50), vec2(0, 5), 2, 5, ci::Color("red"));
+
+        animal.Move();
+        animal.Move();
+        REQUIRE(animal.GetPosition() == vec2(1,55));
     }
 }

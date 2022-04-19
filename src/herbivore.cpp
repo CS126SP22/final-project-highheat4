@@ -34,6 +34,8 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
       radius_ = radius;
       size_ = new_size;
       color_ = new_color;
+      max_energy_ = kDefaultEnergy;
+      energy_ = max_energy_;
   }
 
   glm::vec2 Herbivore::GetPosition() const {
