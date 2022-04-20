@@ -80,7 +80,7 @@ namespace animal_simulator {
             vegetation_.push_back(Vegetation(vec2(kDefaultXCoord, kDefaultYCoord),
                      vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight)));
         if (herbivores_.size() < kMaxHerbivoreCount)
-        {herbivores_.push_back(Herbivore(1,ci::Color("Blue")));}
+        {herbivores_.push_back(Herbivore(1));}
         frame_count_ = 0;
         for (int i = 0; i < vegetation_.size(); i++) {
             vegetation_[i].Grow();

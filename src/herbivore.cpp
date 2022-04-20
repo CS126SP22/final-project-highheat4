@@ -11,15 +11,17 @@ namespace animal_simulator {
     position_ = new_position;
     size_ = new_size;
     color_ = new_color;
-    max_health_ = kDefaultHealth;
+    max_health_ = Random::fRand(0, kMaxSpawnHealth);
     health_ = max_health_;
     max_energy_ = kDefaultEnergy;
     energy_ = max_energy_;
+    growth_rate_ = Random::fRand(0, kMaxSpawnGrowthRate);
   }
 
-  Herbivore::Herbivore(float new_size, ci::Color new_color) {
+  Herbivore::Herbivore(float new_size) {
     double kMinVelocity = 0.0;
     double kMaxVelocity = 10.0;
+    ci::Color new_color = cinder::Color(Random::fRand(0,1),Random::fRand(0,1),Random::fRand(0,1));
     *this = Herbivore(vec2(rand() % kDefaultWidth + kDefaultXCoord,
                            rand() % kDefaultHeight + kDefaultYCoord), //position
 vec2(Random::fRand(kMinVelocity, kMaxVelocity),
@@ -127,25 +129,25 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   }
 
   void Herbivore::CheckContainerCollision(float left_wall, float right_wall, float top_wall, float bottom_wall) {
-    if (this -> GetPosition().x - this -> radius_ <= left_wall) { // Hits left wall
+    if (this -> GetPosition().x - this -> size_ <= left_wall) { // Hits left wall
       if (this -> GetVelocity().x < 0) {
         this -> SetVelocity(this->GetNegatedVelocity(true));
       }
     }
 
-    if (this -> GetPosition().x + this -> radius_ >= right_wall) { // Hits right wall
+    if (this -> GetPosition().x + this -> size_ >= right_wall) { // Hits right wall
       if (this -> GetVelocity().x > 0) {
         this -> SetVelocity(this->GetNegatedVelocity(true));
       }
     }
 
-    if (this -> GetPosition().y - this -> radius_ <= top_wall) { // Hits top wall
+    if (this -> GetPosition().y - this -> size_ <= top_wall) { // Hits top wall
       if (this -> GetVelocity().y < 0) {
         this -> SetVelocity(this -> GetNegatedVelocity(false));
       }
     }
 
-    if (this -> GetPosition().y + this -> radius_ >= (bottom_wall)) { // Hits bottom wall
+    if (this -> GetPosition().y + this -> size_ >= (bottom_wall)) { // Hits bottom wall
       if (this -> GetVelocity().y > 0) {
         this -> SetVelocity(this -> GetNegatedVelocity(false));
       }
