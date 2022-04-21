@@ -16,9 +16,11 @@ namespace animal_simulator {
     max_energy_ = kDefaultEnergy;
     energy_ = max_energy_;
     growth_rate_ = Random::fRand(0, kMaxSpawnGrowthRate);
+    base_eat_rate_ = Random::fRand(0, kMaxEatRate);
+    need_for_speed_ = Random::fRand(0,kMaxNeedForSpeed);
   }
 
-  Herbivore::Herbivore(float new_size) {
+  Herbivore::Herbivore() {
     double kMinVelocity = 0.0;
     double kMaxVelocity = 10.0;
     ci::Color new_color = cinder::Color(Random::fRand(0,1),Random::fRand(0,1),Random::fRand(0,1));
@@ -26,7 +28,7 @@ namespace animal_simulator {
                            rand() % kDefaultHeight + kDefaultYCoord), //position
 vec2(Random::fRand(kMinVelocity, kMaxVelocity),
      Random::fRand(kMinVelocity, kMaxVelocity)),    //velocity
-      new_size, new_color);
+      Random::fRand(0, kMaxSpawnSize), new_color);
   }
 
   Herbivore::Herbivore(vec2 position, vec2 velocity, float radius,
@@ -66,16 +68,18 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
 
   void Herbivore::Move() {
     size_ += growth_rate_;
+    velocity_ = glm::normalize(velocity_) * need_for_speed_ * energy_ / max_energy_;
     if (energy_ > 0) {
-        vec2 offset_value = velocity_ * energy_ / max_energy_;
+        vec2 offset_value = velocity_;
         energy_ -= this -> CalculateEnergyConsumption();
         position_ += offset_value;
     }
   }
 
   float Herbivore::CalculateEnergyConsumption() {
-      float kEnergyDivisor = 10000;
-      return (size_ * sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y) * max_health_) / kEnergyDivisor;
+      float kEnergyDivisor = 30000;
+      return (pow(size_,2) *
+              (1 + sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y)) * max_health_) / kEnergyDivisor;
   }
 
   bool Herbivore::IsDead() {
@@ -122,7 +126,10 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
 
   bool Herbivore::Consume(Vegetation & food) {
     if (energy_ < max_energy_) {
-        energy_ += sqrt(base_eat_rate_ * size_);
+        if (sqrt(base_eat_rate_ * size_) < max_energy_)
+            energy_ += sqrt(base_eat_rate_ * size_);
+        else
+            energy_ = max_energy_;
         return food.Eaten(sqrt(base_eat_rate_ * size_));
     }
     return false;
