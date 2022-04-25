@@ -70,13 +70,12 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
     size_ += growth_rate_;
     velocity_ = glm::normalize(velocity_) * need_for_speed_ * energy_ / max_energy_;
     if (energy_ > 0) {
-        vec2 offset_value = velocity_;
         energy_ -= this -> CalculateEnergyConsumption();
-        position_ += offset_value;
+        position_ += velocity_;
     }
   }
 
-  float Herbivore::CalculateEnergyConsumption() {
+  float Herbivore::CalculateEnergyConsumption() { //.length
       float kEnergyDivisor = 30000;
       return (pow(size_,2) *
               (1 + sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y)) * max_health_) / kEnergyDivisor;

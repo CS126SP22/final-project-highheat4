@@ -170,7 +170,7 @@ namespace animal_simulator {
 
     /**
     * Individual animal position, velocity, size, radius, color, health, max health, growth rate,
-     * energy, need for speed, and max energy.
+    * energy, need for speed, and max energy.
     */
     glm::vec2 position_;
     glm::vec2 velocity_;
@@ -181,8 +181,20 @@ namespace animal_simulator {
     int max_health_;
     float energy_;
     float max_energy_;
+
+    /**
+     * The rate at which the herbivore grows.
+     */
     float growth_rate_ = 0.01;
+
+    /**
+     * The rate at which the herbivore is able to eat.
+     */
     float base_eat_rate_ = 0.5;
+
+    /**
+     * The maximum speed that the herbivore can go.
+     */
     float need_for_speed_;
 
     /**
