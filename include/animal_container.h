@@ -89,6 +89,11 @@ namespace animal_simulator {
      * Keeps track of how many frames have passed so as to update spawner.
      */
     int frame_count_ = 0;
+
+    /**
+     * The number of frames that must pass before new vegetation or animal is added.
+     */
+     int kSpawnAtFrame = 60;
   };
 
 }

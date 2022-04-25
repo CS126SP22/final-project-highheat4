@@ -35,11 +35,26 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   float new_size, ci::Color new_color) {
       position_ = position;
       velocity_ = velocity;
-      radius_ = radius;
       size_ = new_size;
       color_ = new_color;
       max_energy_ = kDefaultEnergy;
       energy_ = max_energy_;
+  }
+
+    Herbivore::Herbivore(vec2 position, vec2 new_velocity, ci::Color new_color, float new_size, float new_growth_rate,
+                         float new_eat_rate, float new_max_energy,
+                         float new_max_health, float new_need_for_speed) {
+      position_ = position;
+      velocity_ = new_velocity;
+      color_ = new_color;
+      size_ = new_size;
+      growth_rate_ = new_growth_rate;
+      base_eat_rate_ = new_eat_rate;
+      max_energy_ = new_max_energy;
+      energy_ = max_energy_;
+      max_health_ = new_max_health;
+      health_ = new_max_health;
+      need_for_speed_ = new_need_for_speed;
   }
 
   glm::vec2 Herbivore::GetPosition() const {
@@ -211,5 +226,32 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
     }
 
     return false;
+  }
+
+  Herbivore* Herbivore::Reproduce() {
+      if (this -> CanReproduce()) {
+          float new_need_for_speed = Random::fReproductionDistribution(need_for_speed_);
+          ci::Color new_color = ci::Color(Random::fReproductionDistribution(color_.r), Random::fReproductionDistribution(color_.g),
+                                          Random::fReproductionDistribution(color_.b));
+          float new_growth_rate = Random::fReproductionDistribution(growth_rate_);
+          float new_size = 1;
+          float new_eat_rate = Random::fReproductionDistribution(base_eat_rate_);
+          float new_max_energy = Random::fReproductionDistribution(max_energy_);
+          float new_max_health = Random::fReproductionDistribution(max_health_);
+          vec2 new_velocity = vec2(Random::fReproductionDistribution(velocity_.x),
+                                    Random::fReproductionDistribution(velocity_.y));
+          Herbivore herb = Herbivore(position_, new_velocity, new_color, new_size, new_growth_rate, new_eat_rate, new_max_energy,
+                    new_max_health, new_need_for_speed);
+          Herbivore * herb_ptr = &herb;
+          return herb_ptr;
+      }
+      return nullptr;
+  }
+
+  bool Herbivore::CanReproduce() {
+      if (age_ > kReproductionAge) {
+          return true;
+      }
+      return false;
   }
 }

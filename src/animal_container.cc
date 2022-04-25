@@ -75,7 +75,7 @@ namespace animal_simulator {
           herbivores_.erase(herbivores_.begin() + i);
     }
 
-    if (frame_count_ > 60) {
+    if (frame_count_ > kSpawnAtFrame) {
         if (vegetation_.size() < kMaxVegetationCount)
             vegetation_.push_back(Vegetation(vec2(kDefaultXCoord, kDefaultYCoord),
                      vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight)));

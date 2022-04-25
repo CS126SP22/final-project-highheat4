@@ -41,6 +41,22 @@ namespace animal_simulator {
     Herbivore();
 
     /**
+     *
+     * @param position position to spawn herbivore in.
+     * @param new_velocity the herbivore's new velocity.
+     * @param new_color the herbivore color.
+     * @param new_size the size of the herbivore.
+     * @param new_growth_rate the growth rate of the herbivore.
+     * @param new_eat_rate the rate at which the herbivore can consume.
+     * @param new_max_energy the maximum energy of the herbivore.
+     * @param new_max_health the maximum health of the herbivore.
+     * @param new_need_for_speed the maximum speed the herbivore will go.
+     */
+    Herbivore(vec2 position, vec2 new_velocity, ci::Color new_color, float new_size, float new_growth_rate,
+              float new_eat_rate, float new_max_energy,
+              float new_max_health, float new_need_for_speed);
+
+    /**
     * Checks whether herbivore is touching vegetation.
     * @param food the vegetation we are checking contact with.
     * @return whether herbivore is touching vegetation.
@@ -112,6 +128,11 @@ namespace animal_simulator {
     */
     bool IsDead();
 
+    /**
+     * Reproduces another herbivore with similar stats if herbivore is of age.
+     */
+    Herbivore* Reproduce();
+
     private:
     /**
      * Maximum random spawn growth rate possible.
@@ -159,28 +180,32 @@ namespace animal_simulator {
     static const int kDefaultYCoord = 100;
 
     /**
-    * Default spawn health.
-    */
-    static const int kDefaultHealth = 10;
-
-    /**
     * Default initial energy.
     */
     static const int kDefaultEnergy = 10;
 
     /**
+     * Minimum age required to reproduce.
+     */
+     static const int kReproductionAge = 1000;
+
+    /**
     * Individual animal position, velocity, size, radius, color, health, max health, growth rate,
-    * energy, need for speed, and max energy.
+    * energy, need for speed, age, and max energy.
     */
     glm::vec2 position_;
     glm::vec2 velocity_;
     float size_;
-    float radius_;
     ci::Color color_;
     int health_;
     int max_health_;
     float energy_;
     float max_energy_;
+
+    /**
+     * The overall age (by frame) of the herbivore.
+     */
+    int age_ = 0;
 
     /**
      * The rate at which the herbivore grows.
@@ -223,6 +248,12 @@ namespace animal_simulator {
     * @return the energy consumed for this object.
     */
     float CalculateEnergyConsumption();
+
+    /**
+     * Tells whether the herbivore can reproduce.
+     * @return whether the herbivore can reproduce.
+     */
+    bool CanReproduce();
   };
 
 }

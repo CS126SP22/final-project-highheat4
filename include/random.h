@@ -13,5 +13,12 @@ namespace animal_simulator {
      * @return A random double between fMin and fMax.
      */
     static double fRand(double fMin, double fMax);
+
+    /**
+     * Calculates a random number based off of the reproduction distribution.
+     * @param target The number we are trying to generate a number similar to.
+     * @return a number similar to the target number.
+     */
+    static double fReproductionDistribution(double target);
   };
 }

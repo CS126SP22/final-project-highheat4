@@ -10,4 +10,9 @@ namespace animal_simulator {
         double f = (double) rand() / RAND_MAX;
         return fMin + f * (fMax - fMin);
     }
+
+    double Random::fReproductionDistribution(double number) {
+        double kDivisor = 8;
+        return fRand(number - number / kDivisor, number + number / kDivisor);
+    }
 }
