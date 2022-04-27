@@ -7,12 +7,21 @@
 namespace animal_simulator {
 //// Source: Stackoverflow
     double Random::fRand(double fMin, double fMax) {
+        bool is_negative = false;
+        if (fMin < 0) {
+            fMin = abs(fMin);
+            fMax = abs(fMax);
+            is_negative = true;
+        }
         double f = (double) rand() / RAND_MAX;
+        if (is_negative)
+            return - (fMin + f * (fMax - fMin));
         return fMin + f * (fMax - fMin);
     }
 
     double Random::fReproductionDistribution(double number) {
         double kDivisor = 8;
-        return fRand(number - number / kDivisor, number + number / kDivisor);
+        double to_return = fRand(number - (number / kDivisor), number + (number / kDivisor));
+        return to_return;
     }
 }

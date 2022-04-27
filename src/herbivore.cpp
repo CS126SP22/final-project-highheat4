@@ -83,6 +83,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
 
   void Herbivore::Move() {
     size_ += growth_rate_;
+    age_ += 5;
     velocity_ = glm::normalize(velocity_) * need_for_speed_ * energy_ / max_energy_;
     if (energy_ > 0) {
         energy_ -= this -> CalculateEnergyConsumption();
@@ -228,24 +229,19 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
     return false;
   }
 
-  Herbivore* Herbivore::Reproduce() {
-      if (this -> CanReproduce()) {
-          float new_need_for_speed = Random::fReproductionDistribution(need_for_speed_);
-          ci::Color new_color = ci::Color(Random::fReproductionDistribution(color_.r), Random::fReproductionDistribution(color_.g),
-                                          Random::fReproductionDistribution(color_.b));
-          float new_growth_rate = Random::fReproductionDistribution(growth_rate_);
-          float new_size = 1;
-          float new_eat_rate = Random::fReproductionDistribution(base_eat_rate_);
-          float new_max_energy = Random::fReproductionDistribution(max_energy_);
-          float new_max_health = Random::fReproductionDistribution(max_health_);
-          vec2 new_velocity = vec2(Random::fReproductionDistribution(velocity_.x),
-                                    Random::fReproductionDistribution(velocity_.y));
-          Herbivore herb = Herbivore(position_, new_velocity, new_color, new_size, new_growth_rate, new_eat_rate, new_max_energy,
-                    new_max_health, new_need_for_speed);
-          Herbivore * herb_ptr = &herb;
-          return herb_ptr;
-      }
-      return nullptr;
+  Herbivore Herbivore::Reproduce() {
+      float new_need_for_speed = Random::fReproductionDistribution(need_for_speed_);
+      ci::Color new_color = color_;
+      float new_growth_rate = Random::fReproductionDistribution(growth_rate_);
+      float new_size = 5;
+      float new_eat_rate = Random::fReproductionDistribution(base_eat_rate_);
+      float new_max_energy = Random::fReproductionDistribution(max_energy_);
+      float new_max_health = Random::fReproductionDistribution(max_health_);
+      vec2 new_velocity = vec2(-velocity_.x, -velocity_.y);
+      vec2 new_position = vec2(100, 100);
+      Herbivore herb = Herbivore(new_position, new_velocity, new_color, new_size, new_growth_rate, new_eat_rate, new_max_energy,
+                new_max_health, new_need_for_speed);
+      return herb;
   }
 
   bool Herbivore::CanReproduce() {

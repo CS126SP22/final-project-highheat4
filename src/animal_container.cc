@@ -71,6 +71,10 @@ namespace animal_simulator {
             }
         }
       herbivores_.at(i).Move();
+
+        if (herbivores_.at(i).CanReproduce()) {
+            herbivores_.push_back(herbivores_.at(i).Reproduce());
+        }
       if (herbivores_.at(i).IsDead())
           herbivores_.erase(herbivores_.begin() + i);
     }

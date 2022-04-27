@@ -73,7 +73,7 @@ namespace animal_simulator {
     /**
      * The max number of herbivores.
      */
-    int kMaxHerbivoreCount = 10;
+    int kMaxHerbivoreCount = 2;
 
     /**
      * A vector storing all the vegetation within the animal container.

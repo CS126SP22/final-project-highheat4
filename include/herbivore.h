@@ -131,7 +131,13 @@ namespace animal_simulator {
     /**
      * Reproduces another herbivore with similar stats if herbivore is of age.
      */
-    Herbivore* Reproduce();
+    Herbivore Reproduce();
+
+    /**
+    * Tells whether the herbivore can reproduce.
+    * @return whether the herbivore can reproduce.
+    */
+    bool CanReproduce();
 
     private:
     /**
@@ -187,7 +193,7 @@ namespace animal_simulator {
     /**
      * Minimum age required to reproduce.
      */
-     static const int kReproductionAge = 1000;
+     static const int kReproductionAge = 100;
 
     /**
     * Individual animal position, velocity, size, radius, color, health, max health, growth rate,
@@ -248,12 +254,6 @@ namespace animal_simulator {
     * @return the energy consumed for this object.
     */
     float CalculateEnergyConsumption();
-
-    /**
-     * Tells whether the herbivore can reproduce.
-     * @return whether the herbivore can reproduce.
-     */
-    bool CanReproduce();
   };
 
 }
