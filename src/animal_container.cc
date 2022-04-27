@@ -71,16 +71,20 @@ namespace animal_simulator {
             }
         }
       herbivores_.at(i).Move();
+
+        if (herbivores_.at(i).CanReproduce()) {
+            herbivores_.push_back(herbivores_.at(i).Reproduce());
+        }
       if (herbivores_.at(i).IsDead())
           herbivores_.erase(herbivores_.begin() + i);
     }
 
-    if (frame_count_ > 60) {
+    if (frame_count_ > kSpawnAtFrame) {
         if (vegetation_.size() < kMaxVegetationCount)
             vegetation_.push_back(Vegetation(vec2(kDefaultXCoord, kDefaultYCoord),
                      vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight)));
         if (herbivores_.size() < kMaxHerbivoreCount)
-        {herbivores_.push_back(Herbivore(1,ci::Color("Blue")));}
+        {herbivores_.push_back(Herbivore());}
         frame_count_ = 0;
         for (int i = 0; i < vegetation_.size(); i++) {
             vegetation_[i].Grow();
