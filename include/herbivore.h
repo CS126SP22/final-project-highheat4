@@ -193,7 +193,12 @@ namespace animal_simulator {
     /**
      * Minimum age required to reproduce.
      */
-     static const int kReproductionAge = 100;
+     static const int kReproductionAge = 500;
+
+    /**
+     * Minimum time needed to pass before the next reproduction age.
+     */
+     static const int kMinReproductionTimer = 650;
 
     /**
     * Individual animal position, velocity, size, radius, color, health, max health, growth rate,
@@ -207,6 +212,11 @@ namespace animal_simulator {
     int max_health_;
     float energy_;
     float max_energy_;
+
+    /**
+     * Checks if herbivore has eaten food at all. Eating is a reproduction condition for reproduction.
+     */
+    bool has_eaten_ = false;
 
     /**
      * The overall age (by frame) of the herbivore.

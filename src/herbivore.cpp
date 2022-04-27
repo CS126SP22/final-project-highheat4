@@ -55,6 +55,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
       max_health_ = new_max_health;
       health_ = new_max_health;
       need_for_speed_ = new_need_for_speed;
+      has_eaten_ = false;
   }
 
   glm::vec2 Herbivore::GetPosition() const {
@@ -83,7 +84,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
 
   void Herbivore::Move() {
     size_ += growth_rate_;
-    age_ += 5;
+    age_ += 1;
     velocity_ = glm::normalize(velocity_) * need_for_speed_ * energy_ / max_energy_;
     if (energy_ > 0) {
         energy_ -= this -> CalculateEnergyConsumption();
@@ -92,9 +93,9 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   }
 
   float Herbivore::CalculateEnergyConsumption() { //.length
-      float kEnergyDivisor = 30000;
-      return (pow(size_,2) *
-              (1 + sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y)) * max_health_) / kEnergyDivisor;
+      float kEnergyDivisor = 100000;
+      return ((1+pow(size_,2)) *
+              (1 + sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y)) * (1+max_health_)) / kEnergyDivisor;
   }
 
   bool Herbivore::IsDead() {
@@ -140,6 +141,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
     }
 
   bool Herbivore::Consume(Vegetation & food) {
+    has_eaten_ = true;
     if (energy_ < max_energy_) {
         if (sqrt(base_eat_rate_ * size_) < max_energy_)
             energy_ += sqrt(base_eat_rate_ * size_);
@@ -233,19 +235,19 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
       float new_need_for_speed = Random::fReproductionDistribution(need_for_speed_);
       ci::Color new_color = color_;
       float new_growth_rate = Random::fReproductionDistribution(growth_rate_);
-      float new_size = 5;
+      float new_size = 1;
       float new_eat_rate = Random::fReproductionDistribution(base_eat_rate_);
       float new_max_energy = Random::fReproductionDistribution(max_energy_);
       float new_max_health = Random::fReproductionDistribution(max_health_);
       vec2 new_velocity = vec2(-velocity_.x, -velocity_.y);
-      vec2 new_position = vec2(100, 100);
+      vec2 new_position = vec2(position_.x + new_size, position_.y - new_size);
       Herbivore herb = Herbivore(new_position, new_velocity, new_color, new_size, new_growth_rate, new_eat_rate, new_max_energy,
                 new_max_health, new_need_for_speed);
       return herb;
   }
 
   bool Herbivore::CanReproduce() {
-      if (age_ > kReproductionAge) {
+      if (age_ >= kReproductionAge && age_ % kMinReproductionTimer == 0 && has_eaten_) {
           return true;
       }
       return false;
