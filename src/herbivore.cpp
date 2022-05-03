@@ -17,13 +17,13 @@ namespace animal_simulator {
     energy_ = max_energy_;
     growth_rate_ = Random::fRand(0, kMaxSpawnGrowthRate);
     base_eat_rate_ = Random::fRand(0, kMaxEatRate);
-    need_for_speed_ = Random::fRand(0,kMaxNeedForSpeed);
+      max_speed_ = Random::fRand(0, kMaxNeedForSpeed);
   }
 
   Herbivore::Herbivore() {
     double kMinVelocity = 0.0;
     double kMaxVelocity = 10.0;
-    ci::Color new_color = cinder::Color(Random::fRand(0,1),Random::fRand(0,1),Random::fRand(0,1));
+    ci::Color new_color = cinder::Color(0,Random::fRand(0,1),Random::fRand(0,1));
     *this = Herbivore(vec2(rand() % kDefaultWidth + kDefaultXCoord,
                            rand() % kDefaultHeight + kDefaultYCoord), //position
 vec2(Random::fRand(kMinVelocity, kMaxVelocity),
@@ -54,7 +54,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
       energy_ = max_energy_;
       max_health_ = new_max_health;
       health_ = new_max_health;
-      need_for_speed_ = new_need_for_speed;
+        max_speed_ = new_need_for_speed;
       has_eaten_ = false;
   }
 
@@ -78,6 +78,30 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
         return color_;
     }
 
+    float Herbivore::GetMaxSpeed() const {
+        return max_speed_;
+    }
+
+    float Herbivore::GetSpeed() const {
+      return length(velocity_);
+    }
+
+    float Herbivore::GetGrowthRate() const {
+      return growth_rate_;
+    }
+
+    float Herbivore::GetEatRate() const {
+      return base_eat_rate_;
+    }
+
+    float Herbivore::GetMaxHealth() const {
+      return max_health_;
+    }
+
+    float Herbivore::GetHealth() const {
+      return health_;
+    }
+
   void Herbivore::SetVelocity(glm::vec2 new_velocity) {
     velocity_ = new_velocity;
   }
@@ -85,7 +109,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   void Herbivore::Move() {
     size_ += growth_rate_;
     age_ += 1;
-    velocity_ = glm::normalize(velocity_) * need_for_speed_ * energy_ / max_energy_;
+    velocity_ = glm::normalize(velocity_) * max_speed_ * energy_ / max_energy_;
     if (energy_ > 0) {
         energy_ -= this -> CalculateEnergyConsumption();
         position_ += velocity_;
@@ -232,17 +256,22 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   }
 
   Herbivore Herbivore::Reproduce() {
-      float new_need_for_speed = Random::fReproductionDistribution(need_for_speed_);
-      ci::Color new_color = color_;
-      float new_growth_rate = Random::fReproductionDistribution(growth_rate_);
-      float new_size = 1;
-      float new_eat_rate = Random::fReproductionDistribution(base_eat_rate_);
-      float new_max_energy = Random::fReproductionDistribution(max_energy_);
-      float new_max_health = Random::fReproductionDistribution(max_health_);
-      vec2 new_velocity = vec2(-velocity_.x, -velocity_.y);
-      vec2 new_position = vec2(position_.x + new_size, position_.y - new_size);
-      Herbivore herb = Herbivore(new_position, new_velocity, new_color, new_size, new_growth_rate, new_eat_rate, new_max_energy,
-                new_max_health, new_need_for_speed);
+      float reproduction_cost = 5;
+      float child_need_for_speed = Random::fReproductionDistribution(max_speed_);
+      ci::Color child_color = color_;
+      float child_growth_rate = Random::fReproductionDistribution(growth_rate_);
+      float child_size_divisor = 10;
+      if (size_ / child_size_divisor < 1)
+          child_size_divisor = size_;
+      float child_eat_rate = Random::fReproductionDistribution(base_eat_rate_);
+      float child_max_energy = Random::fReproductionDistribution(max_energy_);
+      float child_max_health = Random::fReproductionDistribution(max_health_);
+      vec2 child_velocity = vec2(-velocity_.x, -velocity_.y);
+      vec2 child_position = vec2(position_.x + size_, position_.y - size_);
+      Herbivore herb = Herbivore(child_position, child_velocity, child_color, size_ / child_size_divisor,
+                                 child_growth_rate, child_eat_rate, child_max_energy,
+                                 child_max_health, child_need_for_speed);
+      energy_ = energy_ - reproduction_cost;
       return herb;
   }
 

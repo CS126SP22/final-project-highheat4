@@ -63,3 +63,26 @@ TEST_CASE("Energy implementation tested") {
     REQUIRE(animal.GetPosition() == vec2(1,55));
   }
 }
+
+TEST_CASE("Check reproduction within bounds") {
+    SECTION("Similar position of child") {
+        Herbivore animal =
+                Herbivore(vec2(1, 50), vec2(0, 5), 2, 5, ci::Color("red"));
+
+        for (int i = 0; i < 500; i++) {
+            REQUIRE(abs(animal.Reproduce().GetPosition().x - animal.GetPosition().x) <= animal.GetRadius());
+            REQUIRE(abs(animal.Reproduce().GetPosition().y - animal.GetPosition().y) <= animal.GetRadius());
+        }
+    }
+
+    SECTION("Reproduction randomization works within bounds") {
+        Herbivore animal =
+                Herbivore(vec2(1, 50), vec2(0, 5), 2, 5, ci::Color("red"));
+
+        for (int i = 0; i < 500; i++) {
+            REQUIRE(abs(animal.GetColor().b - animal.Reproduce().GetColor().b) <= animal.GetColor().b / 8);
+            REQUIRE(abs(animal.GetColor().g - animal.Reproduce().GetColor().g) <= animal.GetColor().g / 8);
+            REQUIRE(abs(animal.GetColor().r - animal.Reproduce().GetColor().r) <= animal.GetColor().r / 8);
+        }
+    }
+}

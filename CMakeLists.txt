@@ -41,7 +41,7 @@ FetchContent_GetProperties(catch2)
 if(NOT catch2_POPULATED)
     FetchContent_Populate(catch2)
     add_library(catch2 INTERFACE include/vegetation.h include/herbivore.h src/herbivore.cpp include/random.h src/random.cpp
-            include/animal_container.h src/animal_container.cc include/animal_simulation.h src/animal_simulation.cc tests/test_vegetation.cpp)
+            include/animal_container.h src/animal_container.cc include/animal_simulation.h src/animal_simulation.cc tests/test_vegetation.cpp include/animal_status.h)
     target_include_directories(catch2 INTERFACE ${catch2_SOURCE_DIR}/single_include)
 endif()
 
