@@ -27,6 +27,12 @@ class AnimalSimulationApp : public ci::app::App {
     */
     void update() override;
 
+    /**
+     *
+     * @param event
+     */
+    void mouseDown(ci::app::MouseEvent event) override;
+
     // provided that you can see the entire UI on your screen.
     const int kWindowSizeX = 875 * 1.6;
     const int kWindowSizeY = 875 * .95;

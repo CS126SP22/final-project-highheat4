@@ -3,6 +3,7 @@
 #include "cinder/gl/gl.h"
 #include "herbivore.h"
 #include "vegetation.h"
+#include "animal_statistics.h"
 
 using glm::vec2;
 
@@ -43,6 +44,8 @@ namespace animal_simulator {
      * @returns animals_ vector
      */
     std::vector<Herbivore> GetAnimals();
+
+
 
   private:
     /**
@@ -94,6 +97,13 @@ namespace animal_simulator {
      * The number of frames that must pass before new vegetation or animal is added.
      */
      int kSpawnAtFrame = 60;
+
+     /**
+       * Given a set of coordinates, returns the herbivore closest to those coords.
+       * @param brush_screen_coords the coordinates to find a herbivore against.
+       * @return the herbivore closest to brush_screen_coords.
+       */
+      Herbivore FindHerbivore(const vec2& brush_screen_coords);
   };
 
 }

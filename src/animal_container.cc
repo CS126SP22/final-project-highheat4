@@ -43,6 +43,8 @@ namespace animal_simulator {
     for (int i = 0; i < vegetation_.size(); i++) {
       vegetation_[i].Draw();
     }
+
+
   }
 
   void AnimalContainer::AdvanceOneFrame() {
@@ -52,46 +54,68 @@ namespace animal_simulator {
       herbivores_.at(i).CheckContainerCollision(x_coor_, x_coor_ + width_, y_coor_, y_coor_ + height_);
 
       //Checks and updates upon animal collision
-      for (size_t j = i + 1; j < herbivores_.size(); j++) {
-        if (herbivores_.at(i).ApproachesOtherAnimal(herbivores_.at(j))) {
-          if (herbivores_.at(i).IsTouchingAnimal(herbivores_.at(j))) {
-            //Update velocities
-            std::vector<vec2> new_velocities =
-                herbivores_.at(i).CalculateCollisionResults(herbivores_.at(j));
+        for (size_t j = i + 1; j < herbivores_.size(); j++) {
+           if (herbivores_.at(i).ApproachesOtherAnimal(herbivores_.at(j))) {
+              if (herbivores_.at(i).IsTouchingAnimal(herbivores_.at(j))) {
+                //Update velocities
+                std::vector<vec2> new_velocities =
+                    herbivores_.at(i).CalculateCollisionResults(herbivores_.at(j));
 
-            herbivores_.at(i).SetVelocity(new_velocities.at(0));
-            herbivores_.at(j).SetVelocity(new_velocities.at(1));
-          }
+                herbivores_.at(i).SetVelocity(new_velocities.at(0));
+                herbivores_.at(j).SetVelocity(new_velocities.at(1));
+              }
+           }
         }
-      }
         for (int k = 0; k < vegetation_.size(); k++) {
             if (herbivores_.at(i).IsTouchingVegetation(vegetation_[k]) &&
-                    herbivores_.at(i).Consume(vegetation_[k])) {
+                        herbivores_.at(i).Consume(vegetation_[k])) {
                 vegetation_.erase(vegetation_.begin() + k);
             }
         }
-      herbivores_.at(i).Move();
+        herbivores_.at(i).Move();
 
         if (herbivores_.at(i).CanReproduce()) {
             herbivores_.push_back(herbivores_.at(i).Reproduce());
         }
-      if (herbivores_.at(i).IsDead())
-          herbivores_.erase(herbivores_.begin() + i);
+        if (herbivores_.at(i).IsDead()) {
+            herbivores_.erase(herbivores_.begin() + i);
+        }
     }
 
     if (frame_count_ > kSpawnAtFrame) {
         if (vegetation_.size() < kMaxVegetationCount)
             vegetation_.push_back(Vegetation(vec2(kDefaultXCoord, kDefaultYCoord),
                      vec2(kDefaultXCoord + kDefaultWidth, kDefaultYCoord + kDefaultHeight)));
-        if (herbivores_.size() < kMaxHerbivoreCount)
-        {herbivores_.push_back(Herbivore());}
+
+        if (herbivores_.size() < kMaxHerbivoreCount) {
+            herbivores_.push_back(Herbivore());
+        }
+
         frame_count_ = 0;
         for (int i = 0; i < vegetation_.size(); i++) {
             vegetation_[i].Grow();
         }
     }
+
     frame_count_++;
   }
 
+  Herbivore AnimalContainer::FindHerbivore(const vec2& brush_screen_coords) {
+      int index_of_closest = 0;
+      vec2 position_of_closest = herbivores_[0].GetPosition();
 
+      for (int i = 1; i < herbivores_.size(); i++) {
+          if (length(herbivores_[i].GetPosition() - brush_screen_coords) <
+          length(position_of_closest - brush_screen_coords)) {
+              position_of_closest = herbivores_[i].GetPosition();
+              index_of_closest = i;
+          }
+      }
+
+      return herbivores_[index_of_closest];
+  }
+
+    void AnimalContainer::mouseDown(ci::app::MouseEvent event) {
+        Herbivore closest_herbivore = container_.FindHerbivore(event.getPos());
+    }
 }  // namespace animal_simulator
