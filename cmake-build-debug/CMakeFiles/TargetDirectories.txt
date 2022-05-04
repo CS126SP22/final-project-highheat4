@@ -1,5 +1,0 @@
-/Users/ayanbhowmick/Downloads/Cinder/my-projects/final-project-highheat4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/ayanbhowmick/Downloads/Cinder/my-projects/final-project-highheat4/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/ayanbhowmick/Downloads/Cinder/my-projects/final-project-highheat4/cmake-build-debug/CMakeFiles/gas-simulation-test.dir
-/Users/ayanbhowmick/Downloads/Cinder/my-projects/final-project-highheat4/cmake-build-debug/CMakeFiles/gas-simulation.dir
-/Users/ayanbhowmick/Downloads/Cinder/my-projects/final-project-highheat4/cmake-build-debug/CMakeFiles/catch2.dir

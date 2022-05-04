@@ -3,6 +3,7 @@
 #include "cinder/gl/gl.h"
 #include "herbivore.h"
 #include "vegetation.h"
+#include "animal_statistics.h"
 
 using glm::vec2;
 
@@ -44,6 +45,13 @@ namespace animal_simulator {
      */
     std::vector<Herbivore> GetAnimals();
 
+
+    /**
+    * Given a set of coordinates, displays the status of the herbivore closest to said coordinates.
+    * @param brush_screen_coords the coordinates to find a herbivore against.
+    */
+    void DisplayStatus(const vec2& brush_screen_coords);
+
   private:
     /**
      * Default top-left corner coordinates of the rectangular animal container.
@@ -73,7 +81,7 @@ namespace animal_simulator {
     /**
      * The max number of herbivores.
      */
-    int kMaxHerbivoreCount = 10;
+    int kMaxHerbivoreCount = 25;
 
     /**
      * A vector storing all the vegetation within the animal container.
@@ -89,6 +97,17 @@ namespace animal_simulator {
      * Keeps track of how many frames have passed so as to update spawner.
      */
     int frame_count_ = 0;
+
+    /**
+     * The number of frames that must pass before new vegetation or animal is added.
+     */
+     int kSpawnAtFrame = 60;
+
+     /**
+      * The animal statistics class that will display closest animal stats on click.
+      */
+     AnimalStatistics stats_ = AnimalStatistics();
+
   };
 
 }

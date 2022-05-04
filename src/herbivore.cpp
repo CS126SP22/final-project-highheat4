@@ -11,31 +11,53 @@ namespace animal_simulator {
     position_ = new_position;
     size_ = new_size;
     color_ = new_color;
-    max_health_ = kDefaultHealth;
+    max_health_ = Random::fRand(0, kMaxSpawnHealth);
     health_ = max_health_;
     max_energy_ = kDefaultEnergy;
     energy_ = max_energy_;
+    growth_rate_ = Random::fRand(0, kMaxSpawnGrowthRate);
+    base_eat_rate_ = Random::fRand(0, kMaxEatRate);
+    max_speed_ = Random::fRand(0, kMaxNeedForSpeed);
   }
 
-  Herbivore::Herbivore(float new_size, ci::Color new_color) {
+  Herbivore::Herbivore() {
     double kMinVelocity = 0.0;
     double kMaxVelocity = 10.0;
+
+    //Generates a new random color with no red in it
+    ci::Color new_color = cinder::Color(0,Random::fRand(0,1),Random::fRand(0,1));
     *this = Herbivore(vec2(rand() % kDefaultWidth + kDefaultXCoord,
                            rand() % kDefaultHeight + kDefaultYCoord), //position
 vec2(Random::fRand(kMinVelocity, kMaxVelocity),
      Random::fRand(kMinVelocity, kMaxVelocity)),    //velocity
-      new_size, new_color);
+      Random::fRand(0, kMaxSpawnSize), new_color);
   }
 
   Herbivore::Herbivore(vec2 position, vec2 velocity, float radius,
   float new_size, ci::Color new_color) {
       position_ = position;
       velocity_ = velocity;
-      radius_ = radius;
       size_ = new_size;
       color_ = new_color;
       max_energy_ = kDefaultEnergy;
       energy_ = max_energy_;
+  }
+
+    Herbivore::Herbivore(vec2 position, vec2 new_velocity, ci::Color new_color, float new_size, float new_growth_rate,
+                         float new_eat_rate, float new_max_energy,
+                         float new_max_health, float new_need_for_speed) {
+      position_ = position;
+      velocity_ = new_velocity;
+      color_ = new_color;
+      size_ = new_size;
+      growth_rate_ = new_growth_rate;
+      base_eat_rate_ = new_eat_rate;
+      max_energy_ = new_max_energy;
+      energy_ = max_energy_;
+      max_health_ = new_max_health;
+      health_ = new_max_health;
+        max_speed_ = new_need_for_speed;
+      has_eaten_ = false;
   }
 
   glm::vec2 Herbivore::GetPosition() const {
@@ -58,22 +80,48 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
         return color_;
     }
 
+    float Herbivore::GetMaxSpeed() const {
+        return max_speed_;
+    }
+
+    float Herbivore::GetSpeed() const {
+      return length(velocity_);
+    }
+
+    float Herbivore::GetGrowthRate() const {
+      return growth_rate_;
+    }
+
+    float Herbivore::GetEatRate() const {
+      return base_eat_rate_;
+    }
+
+    float Herbivore::GetMaxHealth() const {
+      return max_health_;
+    }
+
+    float Herbivore::GetHealth() const {
+      return health_;
+    }
+
   void Herbivore::SetVelocity(glm::vec2 new_velocity) {
     velocity_ = new_velocity;
   }
 
   void Herbivore::Move() {
     size_ += growth_rate_;
+    age_ += 1;
+    velocity_ = glm::normalize(velocity_) * max_speed_ * energy_ / max_energy_;
     if (energy_ > 0) {
-        vec2 offset_value = velocity_ * energy_ / max_energy_;
         energy_ -= this -> CalculateEnergyConsumption();
-        position_ += offset_value;
+        position_ += velocity_;
     }
   }
 
-  float Herbivore::CalculateEnergyConsumption() {
-      float kEnergyDivisor = 10000;
-      return (size_ * sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y) * max_health_) / kEnergyDivisor;
+  float Herbivore::CalculateEnergyConsumption() { //.length
+      float kEnergyDivisor = 100000;
+      return ((1+pow(size_,2)) *
+              (1 + sqrt(velocity_.x*velocity_.x + velocity_.y*velocity_.y)) * (1+max_health_)) / kEnergyDivisor;
   }
 
   bool Herbivore::IsDead() {
@@ -119,33 +167,37 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
     }
 
   bool Herbivore::Consume(Vegetation & food) {
+    has_eaten_ = true;
     if (energy_ < max_energy_) {
-        energy_ += sqrt(base_eat_rate_ * size_);
+        if (sqrt(base_eat_rate_ * size_) < max_energy_)
+            energy_ += sqrt(base_eat_rate_ * size_);
+        else
+            energy_ = max_energy_;
         return food.Eaten(sqrt(base_eat_rate_ * size_));
     }
     return false;
   }
 
   void Herbivore::CheckContainerCollision(float left_wall, float right_wall, float top_wall, float bottom_wall) {
-    if (this -> GetPosition().x - this -> radius_ <= left_wall) { // Hits left wall
+    if (this -> GetPosition().x - this -> size_ <= left_wall) { // Hits left wall
       if (this -> GetVelocity().x < 0) {
         this -> SetVelocity(this->GetNegatedVelocity(true));
       }
     }
 
-    if (this -> GetPosition().x + this -> radius_ >= right_wall) { // Hits right wall
+    if (this -> GetPosition().x + this -> size_ >= right_wall) { // Hits right wall
       if (this -> GetVelocity().x > 0) {
         this -> SetVelocity(this->GetNegatedVelocity(true));
       }
     }
 
-    if (this -> GetPosition().y - this -> radius_ <= top_wall) { // Hits top wall
+    if (this -> GetPosition().y - this -> size_ <= top_wall) { // Hits top wall
       if (this -> GetVelocity().y < 0) {
         this -> SetVelocity(this -> GetNegatedVelocity(false));
       }
     }
 
-    if (this -> GetPosition().y + this -> radius_ >= (bottom_wall)) { // Hits bottom wall
+    if (this -> GetPosition().y + this -> size_ >= (bottom_wall)) { // Hits bottom wall
       if (this -> GetVelocity().y > 0) {
         this -> SetVelocity(this -> GetNegatedVelocity(false));
       }
@@ -203,5 +255,37 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
     }
 
     return false;
+  }
+
+  Herbivore Herbivore::Reproduce() {
+      //setting child's stats based off of parent stats
+      float reproduction_cost = 5;
+      float child_need_for_speed = Random::fReproductionDistribution(max_speed_);
+      ci::Color child_color = color_;
+      float child_growth_rate = Random::fReproductionDistribution(growth_rate_);
+      float child_size_divisor = 10;
+      if (size_ / child_size_divisor < 1)
+          child_size_divisor = size_;
+      float child_eat_rate = Random::fReproductionDistribution(base_eat_rate_);
+      float child_max_energy = Random::fReproductionDistribution(max_energy_);
+      float child_max_health = Random::fReproductionDistribution(max_health_);
+
+      vec2 child_velocity = vec2(-velocity_.x, -velocity_.y);
+      vec2 child_position = vec2(position_.x + size_, position_.y - size_);
+
+      //loading into new herbivore object
+      Herbivore herb = Herbivore(child_position, child_velocity, child_color, size_ / child_size_divisor,
+                                 child_growth_rate, child_eat_rate, child_max_energy,
+                                 child_max_health, child_need_for_speed);
+
+      energy_ = energy_ - reproduction_cost;
+      return herb;
+  }
+
+  bool Herbivore::CanReproduce() {
+      if (age_ >= kReproductionAge && age_ % kMinReproductionTimer == 0 && has_eaten_) {
+          return true;
+      }
+      return false;
   }
 }
