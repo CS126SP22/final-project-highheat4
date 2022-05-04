@@ -272,5 +272,4 @@ namespace animal_simulator {
     */
     float CalculateEnergyConsumption();
   };
- //TODO MUST ADD INLINE COMMENTS TO REPRODUCTION AND ADD TEST CASES
 }

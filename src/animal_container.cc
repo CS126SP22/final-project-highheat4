@@ -44,7 +44,9 @@ namespace animal_simulator {
       vegetation_[i].Draw();
     }
 
-
+    if (stats_.GetReadyStatus()) {
+        stats_.Draw();
+    }
   }
 
   void AnimalContainer::AdvanceOneFrame() {
@@ -66,6 +68,8 @@ namespace animal_simulator {
               }
            }
         }
+
+        //checks if there is any vegetation interaction with current herbivore
         for (int k = 0; k < vegetation_.size(); k++) {
             if (herbivores_.at(i).IsTouchingVegetation(vegetation_[k]) &&
                         herbivores_.at(i).Consume(vegetation_[k])) {
@@ -74,6 +78,7 @@ namespace animal_simulator {
         }
         herbivores_.at(i).Move();
 
+        //Checks herbivore reproduction ability and death
         if (herbivores_.at(i).CanReproduce()) {
             herbivores_.push_back(herbivores_.at(i).Reproduce());
         }
@@ -100,7 +105,7 @@ namespace animal_simulator {
     frame_count_++;
   }
 
-  Herbivore AnimalContainer::FindHerbivore(const vec2& brush_screen_coords) {
+  void AnimalContainer::DisplayStatus(const vec2& brush_screen_coords) {
       int index_of_closest = 0;
       vec2 position_of_closest = herbivores_[0].GetPosition();
 
@@ -112,10 +117,6 @@ namespace animal_simulator {
           }
       }
 
-      return herbivores_[index_of_closest];
+      stats_ = AnimalStatistics(herbivores_[index_of_closest]);
   }
-
-    void AnimalContainer::mouseDown(ci::app::MouseEvent event) {
-        Herbivore closest_herbivore = container_.FindHerbivore(event.getPos());
-    }
 }  // namespace animal_simulator

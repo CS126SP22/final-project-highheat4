@@ -46,6 +46,11 @@ namespace animal_simulator {
     std::vector<Herbivore> GetAnimals();
 
 
+    /**
+    * Given a set of coordinates, displays the status of the herbivore closest to said coordinates.
+    * @param brush_screen_coords the coordinates to find a herbivore against.
+    */
+    void DisplayStatus(const vec2& brush_screen_coords);
 
   private:
     /**
@@ -99,11 +104,10 @@ namespace animal_simulator {
      int kSpawnAtFrame = 60;
 
      /**
-       * Given a set of coordinates, returns the herbivore closest to those coords.
-       * @param brush_screen_coords the coordinates to find a herbivore against.
-       * @return the herbivore closest to brush_screen_coords.
-       */
-      Herbivore FindHerbivore(const vec2& brush_screen_coords);
+      * The animal statistics class that will display closest animal stats on click.
+      */
+     AnimalStatistics stats_ = AnimalStatistics();
+
   };
 
 }

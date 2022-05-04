@@ -15,6 +15,7 @@ const float kWallLeft = 0;
 const float kWallRight = 100;
 const float kWallBottom = 100;
 using namespace animal_simulator;
+
 TEST_CASE("Test wall collision") {
   SECTION("Wall collision detection confirmed") {
   Herbivore animal =
@@ -65,7 +66,7 @@ TEST_CASE("Energy implementation tested") {
 }
 
 TEST_CASE("Check reproduction within bounds") {
-    SECTION("Similar position of child") {
+    SECTION("Similar child spawn point") {
         Herbivore animal =
                 Herbivore(vec2(1, 50), vec2(0, 5), 2, 5, ci::Color("red"));
 
@@ -75,7 +76,7 @@ TEST_CASE("Check reproduction within bounds") {
         }
     }
 
-    SECTION("Reproduction randomization works within bounds") {
+    SECTION("Reproduction color randomization works") {
         Herbivore animal =
                 Herbivore(vec2(1, 50), vec2(0, 5), 2, 5, ci::Color("red"));
 
@@ -83,6 +84,16 @@ TEST_CASE("Check reproduction within bounds") {
             REQUIRE(abs(animal.GetColor().b - animal.Reproduce().GetColor().b) <= animal.GetColor().b / 8);
             REQUIRE(abs(animal.GetColor().g - animal.Reproduce().GetColor().g) <= animal.GetColor().g / 8);
             REQUIRE(abs(animal.GetColor().r - animal.Reproduce().GetColor().r) <= animal.GetColor().r / 8);
+        }
+    }
+
+    //as reproduction is a single method, checking color and speed changes properly is good enough to show it works overall.
+    SECTION("Reproduction speed randomization works") {
+        Herbivore animal =
+                Herbivore(vec2(1, 50), vec2(0, 5), 2, 5, ci::Color("red"));
+
+        for (int i = 0; i < 500; i++) {
+            REQUIRE(abs(animal.GetMaxSpeed() - animal.Reproduce().GetMaxSpeed()) <= animal.GetMaxSpeed() / 8);
         }
     }
 }

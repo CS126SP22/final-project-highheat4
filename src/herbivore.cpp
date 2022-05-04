@@ -17,12 +17,14 @@ namespace animal_simulator {
     energy_ = max_energy_;
     growth_rate_ = Random::fRand(0, kMaxSpawnGrowthRate);
     base_eat_rate_ = Random::fRand(0, kMaxEatRate);
-      max_speed_ = Random::fRand(0, kMaxNeedForSpeed);
+    max_speed_ = Random::fRand(0, kMaxNeedForSpeed);
   }
 
   Herbivore::Herbivore() {
     double kMinVelocity = 0.0;
     double kMaxVelocity = 10.0;
+
+    //Generates a new random color with no red in it
     ci::Color new_color = cinder::Color(0,Random::fRand(0,1),Random::fRand(0,1));
     *this = Herbivore(vec2(rand() % kDefaultWidth + kDefaultXCoord,
                            rand() % kDefaultHeight + kDefaultYCoord), //position
@@ -256,6 +258,7 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
   }
 
   Herbivore Herbivore::Reproduce() {
+      //setting child's stats based off of parent stats
       float reproduction_cost = 5;
       float child_need_for_speed = Random::fReproductionDistribution(max_speed_);
       ci::Color child_color = color_;
@@ -266,11 +269,15 @@ vec2(Random::fRand(kMinVelocity, kMaxVelocity),
       float child_eat_rate = Random::fReproductionDistribution(base_eat_rate_);
       float child_max_energy = Random::fReproductionDistribution(max_energy_);
       float child_max_health = Random::fReproductionDistribution(max_health_);
+
       vec2 child_velocity = vec2(-velocity_.x, -velocity_.y);
       vec2 child_position = vec2(position_.x + size_, position_.y - size_);
+
+      //loading into new herbivore object
       Herbivore herb = Herbivore(child_position, child_velocity, child_color, size_ / child_size_divisor,
                                  child_growth_rate, child_eat_rate, child_max_energy,
                                  child_max_health, child_need_for_speed);
+
       energy_ = energy_ - reproduction_cost;
       return herb;
   }

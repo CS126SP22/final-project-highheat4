@@ -18,7 +18,7 @@ void AnimalSimulationApp::update() {
 }
 
 void AnimalSimulationApp::mouseDown(ci::app::MouseEvent event) {
-    Herbivore closest_herbivore = container_.FindHerbivore(event.getPos());
+    container_.DisplayStatus(event.getPos());
 }
 
 }  // namespace animal_simulator
