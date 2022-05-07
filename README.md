@@ -1,3 +1,5 @@
 Fill this in before the final project deadline. Someone who has _no familiarity_ with your project should be able to read this and understand:
-* what your project does
-* how to set it up and run it
+
+This project is essentially an animal simulator app where the fittest animals survive. Animals must eat food to replenish their energy and animals that run out of energy or food will die out. Animals randomly generate at the start of the program until a certain animal limit is reached. Animals that have eaten food and survived long enough will reproduce. You can see the stats of any animal by clicking on it or near it. Animals from the same family will have the same color.
+
+To run the program, simply press the green play button on the top right corner and the simulation will run. When you are done watching the simulation, click the red square bottom on the top right to stop it.
